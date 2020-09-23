@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import UseWebSocket from "react-use-websocket";
 import { useList, useKeyPressEvent } from "react-use";
@@ -54,6 +54,18 @@ const App = () => {
 
   useKeyPressEvent("Enter", handleSend);
 
+  const log = useRef(null);
+
+  useEffect(() => {
+    if (log.current !== null) {
+      log.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }, [list]);
+
   return (
     <div style={{ height: "100vh", padding: "25px" }}>
       <div
@@ -67,14 +79,18 @@ const App = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr auto auto",
+            gridTemplateColumns: "1fr  auto",
             alignItems: "center",
             gap: "10px",
           }}
         >
           <h1>Sample elektron chat</h1>
-          <small>My name</small>
-          <input value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            placeholder="Enter your name"
+            style={{ border: "none" }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div
           style={{
@@ -85,11 +101,12 @@ const App = () => {
           {list.map((item, i) => (
             <Message key={i} item={item} />
           ))}
+          <div ref={log} />
         </div>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 200px",
+            gridTemplateColumns: "1fr auto",
             alignItems: "center",
             gap: "20px",
           }}
